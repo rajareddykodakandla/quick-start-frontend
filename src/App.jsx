@@ -1,12 +1,32 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
+import { useState, useEffect } from "react";
+import { CreateTodo } from "./components/CreateTodo";
+import { Todos } from "./components/Todos";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [todos, setTodos] = useState([
+    {
+      title: "gym",
+      description: "Go to gym",
+      completed: true,
+    },
+  ]);
 
-  return <div>Hi there</div>;
+  useEffect(() => {
+    fetch("http://localhost:8080/todos").then(async (res) => {
+      const data = await res.json();
+      console.log("dbdata", data);
+      setTodos(data.todos);
+    });
+  }, []);
+
+  console.log("todos", todos);
+
+  return (
+    <div>
+      <CreateTodo setTodos={setTodos}></CreateTodo>
+      <Todos todos={todos} setTodos={setTodos}></Todos>
+    </div>
+  );
 }
 
 export default App;
